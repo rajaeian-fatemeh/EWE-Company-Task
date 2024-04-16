@@ -1,0 +1,95 @@
+---
+title: "EWE Company Task - Fatemeh Rajaeian"
+format: html
+---
+
+```{python}
+########### Loading the data
+import pandas as pd
+df = pd.read_excel("https://github.com/rajaeian-fatemeh/EWE-Company-Task/raw/main/regional_averages_tm_year.xlsx")
+print(df.head())
+```
+
+```{python}
+df.shape
+```
+
+```{python}
+########### Selecting "Jahr" & "Deutchland"
+germany_data = df[["Jahr", "Deutschland"]]
+germany_data.shape
+```
+```{python}
+########### Calculating statistical measures
+mean_temp = germany_data["Deutschland"].mean()
+std_dev_temp = germany_data["Deutschland"].std()
+min_temp = germany_data["Deutschland"].min()
+max_temp = germany_data["Deutschland"].max()
+
+########### Filtering time period from 1991 to 2020
+period_1991_2020 = germany_data[(germany_data["Jahr"] >= 1991) & (germany_data["Jahr"] <= 2020)]
+
+########### Calculating mean for period from 1991 to 2020
+mean_temp_1991_2020 = period_1991_2020["Deutschland"].mean()
+
+########### Outputs
+print("Statistical Measures:")
+print("Mean Temperature of the entire data is:", mean_temp)
+print("Standard Deviation of Temperature of the entire data is:", std_dev_temp)
+print("Minimum Temperature of the entire data is:", min_temp)
+print("Maximum Temperature of the entire data is:", max_temp)
+print("30-Year Average Temperature is (1991-2020):", mean_temp_1991_2020)
+```
+```{python}
+########### Calculating temperature anomaly & add it as a new column
+germany_data["Temperature_Anomaly"] = germany_data["Deutschland"] - mean_temp_1991_2020
+germany_data.shape
+```
+
+```{python}
+print(germany_data.head())
+```
+
+```{python}
+########### Visualization
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(germany_data["Jahr"], germany_data["Deutschland"], color='blue', label='Temperature Timeseries')
+
+ax.plot(germany_data["Jahr"], germany_data["Temperature_Anomaly"], color='red', label='Temprature Anomaly')
+ax.set_title('Temperature Timeseries and Anomaly')
+ax.set_xlabel('Year')
+ax.set_ylabel('Temprature')
+ax.legend()
+plt.show()
+```
+
+```{python}
+########### Visualization more accurate in 2 plots
+import matplotlib.pyplot as plt
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+ax1.plot(germany_data["Jahr"], germany_data["Deutschland"], color='blue')
+ax1.set_title('Temperature Timeseries')
+ax1.set_xlabel('Year')
+ax1.set_ylabel('Temperature')
+
+ax2.plot(germany_data["Jahr"], germany_data["Temperature_Anomaly"], color='red')
+ax2.set_title('Temperature Anomaly')
+ax2.set_xlabel('Year')
+ax2.set_ylabel('Temprature Anomaly')
+plt.tight_layout()
+plt.show()
+```
+```
+
+* These two plots can provide insights into the temperature trends over time and how temperature deviates from the reference period (1991-2020).
+
+* Positive anomalies (above zero) indicate years when temperatures were warmer than the 30-year average, while negative anomalies (below zero) indicate cooler years.
+
+* Comparing these two plots, can help identify any significant deviations from the long-term average, which may indicate shifts in climate patterns.
+
+
+
